@@ -38,10 +38,11 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`h-screen bg-gray-900 text-white flex flex-col p-4 transition-all duration-300
-        ${isOpen ? "w-64" : "w-20"}
-      `}
-    >
+  className={`h-screen flex flex-col p-4 transition-all duration-300
+    bg-white/70 backdrop-blur-sm text-gray-800 border-r border-gray-200 shadow-sm
+    ${isOpen ? "w-48" : "w-16"}
+  `}
+>
       {/* 上部：開閉ボタン */}
       <div className="flex items-center justify-between mb-8">
         {isOpen && <h1 className="text-xl font-bold">CRM</h1>}

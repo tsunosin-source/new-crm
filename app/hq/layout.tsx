@@ -11,7 +11,10 @@ export default function RootLayout({
   return (
     <div className="flex min-h-screen">
       {/* 左メニュー */}
-      <aside className="w-64 bg-gray-800 text-white p-6 space-y-4">
+      <aside
+  className="w-48 bg-white/70 backdrop-blur-sm text-gray-800 p-6 space-y-4
+             border-r border-gray-200 shadow-sm"
+>
         <h2 className="text-xl font-bold mb-6">本部メニュー</h2>
 
         <nav className="space-y-3">
