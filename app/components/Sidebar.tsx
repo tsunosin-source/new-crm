@@ -13,7 +13,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 function SidebarItem(
-  { href, icon: Icon, label, isOpen }: 
+  { href, icon: Icon, label, isOpen }:
   { href: string; icon: any; label: string; isOpen: boolean }
 ) {
 
@@ -23,12 +23,28 @@ function SidebarItem(
   return (
     <Link
       href={href}
-      className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors
-        ${active ? "bg-blue-600 text-white" : "hover:bg-gray-700"}
+      className={`
+        rounded-lg transition-colors
+        ${active ? "bg-blue-600 text-white" : "hover:bg-gray-200"}
       `}
     >
-      <Icon className="w-6 h-6" />
-      {isOpen && <span>{label}</span>}
+      {/* ← 高さ固定のラッパー（これが決定打） */}
+      <div className={`flex items-center h-12 shrink-0
+        ${isOpen ? "gap-3 px-3 justify-start" : "gap-0 px-1 justify-center"}
+      `}>
+        
+        {/* アイコン（絶対に縮まない） */}
+        <div className="w-10 h-10 flex items-center justify-center shrink-0">
+          <Icon className="w-7 h-7" />
+        </div>
+
+        {/* ラベル */}
+        {isOpen && (
+          <span className="text-sm shrink-0">
+            {label}
+          </span>
+        )}
+      </div>
     </Link>
   );
 }
@@ -38,9 +54,10 @@ export default function Sidebar() {
 
   return (
     <aside
-  className={`h-screen flex flex-col p-4 transition-all duration-300
+  className={`h-screen flex flex-col p-4 shrink-0
     bg-white/70 backdrop-blur-sm text-gray-800 border-r border-gray-200 shadow-sm
-    ${isOpen ? "w-48" : "w-16"}
+    transition-[width] duration-300
+    ${isOpen ? "w-[192px]" : "w-[80px]"}
   `}
 >
       {/* 上部：開閉ボタン */}

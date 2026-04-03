@@ -104,10 +104,10 @@ export default async function Dashboard() {
     <div>
       <Header title="ダッシュボード" />
 
-      <div className="p-10">
+      <div className="p-10 min-w-0">
 
         {/* ▼▼▼ カード5つ ▼▼▼ */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
 
           {/* 今日の予約 */}
           <Link href="/reservations" className="block">
