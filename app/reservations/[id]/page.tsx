@@ -1,113 +1,78 @@
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
 
-// ステータスバッジ（色付き）
-function StatusBadge({ status }: { status: string }) {
-  console.log("BADGE STATUS:", JSON.stringify(status));  // ← ここに置く！
-
-  const colors: Record<string, string> = {
-    pending: "bg-yellow-100 text-yellow-800",
-    confirmed: "bg-green-100 text-green-800",
-    cancelled: "bg-red-100 text-red-800",
-  };
-
-  const labels: Record<string, string> = {
-    pending: "未確認",
-    confirmed: "確認済み",
-    cancelled: "キャンセル",
-  };
-
-  return (
-    <span className={`px-2 py-1 rounded text-sm font-semibold ${colors[status]}`}>
-      {labels[status] ?? status}
-    </span>
-  );
-}
-
-export default async function ReservationDetailPage(
-  props: { params: Promise<{ id: string }> }
-) {
-  const { id } = await props.params;
+export default async function ReservationDetailPage(props: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await props.params; // ← これが必須！
 
   const supabase = createClient();
 
-  // ★ 配列で返ってくるので maybeSingle を使わず select のまま
-  const { data, error } = await supabase
-    .from("reservations_with_details")
+  const { data: reservation, error } = await supabase
+    .from("reservations2")
     .select("*")
-    .eq("id", id);
+    .eq("id", id)
+    .single();
 
-  if (error || !data || data.length === 0) {
+  if (error || !reservation) {
     return <div className="p-10">予約情報が見つかりませんでした。</div>;
   }
 
-  // ★ 配列の 0 番目を取り出す
-  const row = data[0];
-  console.log("STATUS:", row.status);
+  const { data: service } = await supabase
+    .from("services")
+    .select("name")
+    .eq("id", reservation.service_id)
+    .single();
 
   return (
     <div className="p-10">
       <h1 className="text-2xl font-bold mb-6">予約詳細</h1>
 
-      <p><span className="font-semibold">予約ID：</span>{row.id}</p>
-      <p><span className="font-semibold">予約日時：</span>{row.created_at}</p>
+      <p><span className="font-semibold">予約ID：</span>{reservation.id}</p>
 
-      <p className="mt-4">
-        <span className="font-semibold">顧客名：</span>
-        <a
-          href={`/customers/${row.customer_id}`}
-          className="text-blue-600 underline hover:text-blue-800"
-        >
-          {row.customer_name}
-        </a>
+      <p className="mt-2">
+        <span className="font-semibold">日付：</span>
+        {reservation.date}
       </p>
 
       <p className="mt-1">
-        <span className="font-semibold">メニュー：</span>
-        {row.menu_name}
+        <span className="font-semibold">時間：</span>
+        {reservation.start_time} 〜 {reservation.end_time}
       </p>
 
-      <p className="mt-3">
-  <span className="font-semibold">ステータス：</span>
-  <StatusBadge status={row.status} />
+      <p className="mt-2">
+        <span className="font-semibold">お名前：</span>
+        {reservation.name}
+      </p>
+
+      <p className="mt-2">
+        <span className="font-semibold">サービス：</span>
+        {service?.name ?? "不明なサービス"}
+      </p>
+
+      <p className="mt-2">
+  <span className="font-semibold">登録日時：</span>
+  {reservation.created_at}
 </p>
-      {/* ▼▼▼ ステータス変更フォーム ▼▼▼ */}
-      <form
-        action={async (formData) => {
-          "use server";
 
-          const newStatus = formData.get("status");
+{/* ▼ ここにボタンを追加します ▼ */}
+<div className="mt-6 flex gap-4">
+  {/* 編集ボタン（青） */}
+  <a
+    href={`/reservations/${reservation.id}/edit`}
+    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+  >
+    予約を編集する
+  </a>
 
-          const supabase = createClient();
-          await supabase
-            .from("reservations")
-            .update({ status: newStatus })
-            .eq("id", id);
+  {/* 一覧に戻るボタン（グレー） */}
+  <a
+    href="/reservations"
+    className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+  >
+    予約一覧に戻る
+  </a>
+</div>
 
-          return redirect(`/reservations/${id}`);
-        }}
-        className="mt-6"
-      >
-        <label className="block mb-2 font-semibold">ステータスを変更：</label>
-
-        <select
-          name="status"
-          defaultValue={row.status}
-          className="border p-2 rounded"
-        >
-          <option value="pending">保留</option>
-          <option value="confirmed">確認済み</option>
-          <option value="cancelled">キャンセル</option>
-        </select>
-
-        <button
-          type="submit"
-          className="ml-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          更新
-        </button>
-      </form>
-      {/* ▲▲▲ ステータス変更フォームここまで ▲▲▲ */}
     </div>
   );
 }
