@@ -11,7 +11,7 @@ export default function NewReservationPage() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState<any[]>([]);
   const [form, setForm] = useState({
     date: "",
     start_time: "",
