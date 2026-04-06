@@ -53,6 +53,8 @@ export default function ReservePage() {
   };
 
   return (
+    <div style={{ background: "red", padding: "20px", color: "white" }}>
+      TEST RESERVE PAGE
     <div className="p-10 max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold mb-6">予約一覧</h1>
 
