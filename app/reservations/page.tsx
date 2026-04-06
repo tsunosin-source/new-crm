@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-static";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -8,7 +10,6 @@ export default function ReservationsPage() {
   const [reservations, setReservations] = useState<any[]>([]);
   const [services, setServices] = useState<any[]>([]);
 
-  // JST形式に整形
   function formatTime(date: string, start: string, end: string) {
     return `${date} ${start}〜${end}`;
   }
@@ -17,14 +18,12 @@ export default function ReservationsPage() {
     const fetchData = async () => {
       const supabase = createClient();
 
-      // 予約データ
       const { data: reservationsData } = await supabase
         .from("reservations2")
         .select("*")
         .order("date", { ascending: true })
         .order("start_time", { ascending: true });
 
-      // サービス名取得
       const { data: servicesData } = await supabase
         .from("services")
         .select("id, name");
@@ -36,7 +35,6 @@ export default function ReservationsPage() {
     fetchData();
   }, []);
 
-  // service_id → サービス名に変換
   const getServiceName = (id: number) => {
     const s = services.find((x) => x.id === id);
     return s ? s.name : "不明なサービス";
