@@ -28,7 +28,7 @@ export default function NewReservationPage() {
     fetchServices();
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const { error } = await supabase.from("reservations2").insert([
