@@ -1,7 +1,5 @@
 "use client";
 
-export const dynamic = "force-static";
-
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -55,30 +53,41 @@ export default function ReservationsPage() {
         <p className="text-gray-700">予約データがありません。</p>
       ) : (
         <ul className="space-y-4">
-          {reservations.map((r) => (
-            <li
-              key={r.id}
-              className="p-4 border rounded bg-white even:bg-gray-50"
-            >
-              <p className="font-bold">
-                {formatTime(r.date, r.start_time, r.end_time)}
-              </p>
+  {reservations.map((r) => (
+    <li
+      key={r.id}
+      className="p-4 rounded-xl shadow-sm border bg-white"
+    >
+      {/* 日付・時間（Googleカレンダー風に強調） */}
+      <p className="text-lg font-bold text-blue-700">
+        {formatTime(r.date, r.start_time, r.end_time)}
+      </p>
 
-              <p className="mt-1">お名前：{r.name}</p>
+      {/* 名前 */}
+      <p className="mt-2 text-gray-800">
+        <span className="font-semibold">お名前：</span>
+        {r.name}
+      </p>
 
-              <p className="mt-1">サービス：{getServiceName(r.service_id)}</p>
+      {/* サービス名（色付きタグ） */}
+      <p className="mt-2">
+        <span className="inline-block px-2 py-1 text-sm rounded-md bg-green-100 text-green-700">
+          {getServiceName(r.service_id)}
+        </span>
+      </p>
 
-              <p className="mt-2">
-                <Link
-                  href={`/reservations/${r.id}`}
-                  className="text-blue-600 underline hover:text-blue-800"
-                >
-                  予約詳細を見る
-                </Link>
-              </p>
-            </li>
-          ))}
-        </ul>
+      {/* 詳細ボタン */}
+      <div className="mt-4 text-right">
+        <Link
+          href={`/reservations/${r.id}`}
+          className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md text-sm shadow hover:bg-blue-700"
+        >
+          予約詳細を見る
+        </Link>
+      </div>
+    </li>
+  ))}
+</ul>
       )}
     </div>
   );
