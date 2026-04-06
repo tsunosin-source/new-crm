@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Header from "../components/Header";
+import Header from "@/app/components/Header";
 import { createClient } from "@/lib/supabase/client";
 
 export default function SettingsPage() {
