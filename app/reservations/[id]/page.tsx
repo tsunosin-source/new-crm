@@ -13,7 +13,7 @@ export default async function ReservationDetailPage({
   const { data: reservation, error } = await supabase
     .from("reservations2")
     .select("*")
-    .eq("id", id)
+    .eq("id", Number(id))
     .single();
 
   if (error || !reservation) {
