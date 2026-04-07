@@ -21,7 +21,7 @@ export default async function ReservationDetailPage({
     return <div className="p-10">予約情報が見つかりませんでした。</div>;
   }
 
-  // サービス名取得（変数名は service）
+  // サービス名取得
   const { data: service } = await supabase
     .from("services")
     .select("name")
