@@ -6,24 +6,22 @@ export default async function ReservationDetailPage({
 }: {
   params: { id: string };
 }) {
-  const { data: reservation, error } = await supabase
-  .from("reservations2")
-  .select("*")
-  .eq("id", id)   // ← これが正解（UUIDはstring）
-  .single();
+  const { id } = params;
 
   const supabase = createClient();
 
+  // 予約データ取得（UUID は string のまま）
   const { data: reservation, error } = await supabase
     .from("reservations2")
     .select("*")
-    .eq("id", Number(id))
+    .eq("id", id)
     .single();
 
   if (error || !reservation) {
     return <div className="p-10">予約情報が見つかりませんでした。</div>;
   }
 
+  // サービス名取得（変数名は service）
   const { data: service } = await supabase
     .from("services")
     .select("name")
