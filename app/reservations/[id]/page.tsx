@@ -6,7 +6,11 @@ export default async function ReservationDetailPage({
 }: {
   params: { id: string };
 }) {
-  const { id } = params;
+  const { data: reservation, error } = await supabase
+  .from("reservations2")
+  .select("*")
+  .eq("id", id)   // ← これが正解（UUIDはstring）
+  .single();
 
   const supabase = createClient();
 
