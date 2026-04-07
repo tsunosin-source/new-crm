@@ -2,15 +2,12 @@
 export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
 export default function NewReservationPage() {
   const router = useRouter();
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const supabase = createClient();  // ← これだけでOK
 
   const [services, setServices] = useState<any[]>([]);
   const [form, setForm] = useState({

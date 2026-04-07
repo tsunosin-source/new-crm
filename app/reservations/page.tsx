@@ -9,8 +9,31 @@ export default function ReservationsPage() {
   const [reservations, setReservations] = useState<any[]>([]);
   const [services, setServices] = useState<any[]>([]);
 
+  // 日付＋時間フォーマット（Googleカレンダー風）
   function formatTime(date: string, start: string, end: string) {
-    return `${date} ${start}〜${end}`;
+    const startClean = start.slice(0, 5);
+    const endClean = end.slice(0, 5);
+
+    const d = new Date(`${date}T${startClean}`);
+    const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+    const w = weekdays[d.getDay()];
+
+    return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}/${String(d.getDate()).padStart(2, "0")}（${w}） ${startClean}〜${endClean}`;
+  }
+
+  // サービスタグの色
+  function getServiceColor(id: number) {
+    const colors = [
+      "bg-green-100 text-green-700",
+      "bg-blue-100 text-blue-700",
+      "bg-purple-100 text-purple-700",
+      "bg-yellow-100 text-yellow-700",
+      "bg-pink-100 text-pink-700",
+    ];
+    return colors[id % colors.length];
   }
 
   useEffect(() => {
@@ -54,41 +77,45 @@ export default function ReservationsPage() {
         <p className="text-gray-700">予約データがありません。</p>
       ) : (
         <ul className="space-y-4">
-  {reservations.map((r) => (
-    <li
-      key={r.id}
-      className="p-4 rounded-xl shadow-sm border bg-white"
-    >
-      {/* 日付・時間（Googleカレンダー風に強調） */}
-      <p className="text-lg font-bold text-blue-700">
-        {formatTime(r.date, r.start_time, r.end_time)}
-      </p>
+          {reservations.map((r) => (
+            <li
+              key={r.id}
+              className="p-4 rounded-xl shadow-sm border bg-white odd:bg-gray-50"
+            >
+              {/* 日付・時間 */}
+              <p className="text-lg font-bold text-blue-700">
+                {formatTime(r.date, r.start_time, r.end_time)}
+              </p>
 
-      {/* 名前 */}
-      <p className="mt-2 text-gray-800">
-        <span className="font-semibold">お名前：</span>
-        {r.name}
-      </p>
+              {/* 名前 */}
+              <p className="mt-2 text-gray-800">
+                <span className="font-semibold">お名前：</span>
+                {r.name}
+              </p>
 
-      {/* サービス名（色付きタグ） */}
-      <p className="mt-2">
-        <span className="inline-block px-2 py-1 text-sm rounded-md bg-green-100 text-green-700">
-          {getServiceName(r.service_id)}
-        </span>
-      </p>
+              {/* サービスタグ */}
+              <p className="mt-2">
+                <span
+                  className={`inline-block px-2 py-1 text-sm rounded-md ${getServiceColor(
+                    r.service_id
+                  )}`}
+                >
+                  {getServiceName(r.service_id)}
+                </span>
+              </p>
 
-      {/* 詳細ボタン */}
-      <div className="mt-4 text-right">
-        <Link
-          href={`/reservations/${r.id}`}
-          className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md text-sm shadow hover:bg-blue-700"
-        >
-          予約詳細を見る
-        </Link>
-      </div>
-    </li>
-  ))}
-</ul>
+              {/* 詳細ボタン */}
+              <div className="mt-4 text-right">
+                <Link
+                  href={`/reservations/${r.id}`}
+                  className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md text-sm shadow hover:bg-blue-700"
+                >
+                  予約詳細を見る
+                </Link>
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
