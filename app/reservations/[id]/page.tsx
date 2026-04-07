@@ -1,10 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import CancelButton from "./CancelButton";
 
-export default async function ReservationDetailPage(props: {
-  params: Promise<{ id: string }>;
+export default async function ReservationDetailPage({
+  params,
+}: {
+  params: { id: string };
 }) {
-  const { id } = await props.params;
+  const { id } = params;
 
   const supabase = createClient();
 
@@ -58,10 +60,7 @@ export default async function ReservationDetailPage(props: {
         {reservation.created_at}
       </p>
 
-      {/* ▼ ボタンエリア ▼ */}
       <div className="mt-6 flex gap-4">
-
-        {/* 編集ボタン（青） */}
         <a
           href={`/reservations/${reservation.id}/edit`}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -69,10 +68,8 @@ export default async function ReservationDetailPage(props: {
           予約を編集する
         </a>
 
-        {/* キャンセルボタン（赤） */}
         <CancelButton id={reservation.id} />
 
-        {/* 一覧に戻るボタン（グレー） */}
         <a
           href="/reservations"
           className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
