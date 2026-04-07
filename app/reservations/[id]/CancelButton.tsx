@@ -11,7 +11,7 @@ export default function CancelButton({ id }: { id: string }) {
     await supabase
       .from("reservations2")
       .update({ status: "cancelled" })
-      .eq("id", id);
+      .eq("uuid", id)
 
     router.push("/reservations");
   };

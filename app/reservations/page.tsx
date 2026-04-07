@@ -78,9 +78,9 @@ export default function ReservationsPage() {
         <ul className="space-y-4">
           {reservations.map((r) => (
             <li
-              key={r.id}
-              className="p-4 rounded-xl shadow-sm border bg-white odd:bg-gray-50"
-            >
+  key={r.uuid}
+  className="p-4 rounded-xl shadow-sm border bg-white odd:bg-gray-50"
+>
               {/* 日付・時間 */}
               <p className="text-lg font-bold text-blue-700">
                 {formatTime(r.date, r.start_time, r.end_time)}
@@ -106,11 +106,12 @@ export default function ReservationsPage() {
               {/* 詳細ボタン */}
               <div className="mt-4 text-right">
                 <Link
-                  href={`/reservations/${r.id}`}
-                  className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md text-sm shadow hover:bg-blue-700"
-                >
-                  予約詳細を見る
-                </Link>
+  href={`/reservations/${r.uuid}`}
+  className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md text-sm shadow hover:bg-blue-700"
+>
+  予約詳細を見る
+</Link>
+
               </div>
             </li>
           ))}
