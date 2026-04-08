@@ -4,12 +4,12 @@ import CancelButton from "./CancelButton";
 export default async function ReservationDetailPage(
   props: { params: Promise<{ id: string }> }
 ) {
-  // Next.js 16: params は Promise なので await が必要
+  // Next.js 16: params は Promise
   const { id } = await props.params;
 
   const supabase = createClient();
 
-  // 予約データ取得（uuid で検索）
+  // 予約データ取得
   const { data: reservation, error } = await supabase
     .from("reservations2")
     .select("*")
@@ -77,3 +77,7 @@ export default async function ReservationDetailPage(
         >
           予約一覧に戻る
         </a>
+      </div>
+    </div>
+  );
+}
