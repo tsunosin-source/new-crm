@@ -1,11 +1,15 @@
 import { createClient } from "@/lib/supabase/server";
 import CancelButton from "./CancelButton";
 
-export default async function ReservationDetailPage(props: { params: Promise<{ id: string }> }) {
+export default async function ReservationDetailPage(
+  props: { params: Promise<{ id: string }> }
+) {
+  // Next.js 16: params は Promise なので await が必要
   const { id } = await props.params;
 
   const supabase = createClient();
 
+  // 予約データ取得（uuid で検索）
   const { data: reservation, error } = await supabase
     .from("reservations2")
     .select("*")
@@ -15,8 +19,6 @@ export default async function ReservationDetailPage(props: { params: Promise<{ i
   if (error || !reservation) {
     return <div className="p-10">予約情報が見つかりませんでした。</div>;
   }
-}
-
 
   // サービス名取得
   const { data: service } = await supabase
@@ -30,9 +32,9 @@ export default async function ReservationDetailPage(props: { params: Promise<{ i
       <h1 className="text-2xl font-bold mb-6">予約詳細</h1>
 
       <p>
-  <span className="font-semibold">予約ID：</span>
-  {reservation.uuid}
-</p>
+        <span className="font-semibold">予約ID：</span>
+        {reservation.uuid}
+      </p>
 
       <p className="mt-2">
         <span className="font-semibold">日付：</span>
@@ -61,14 +63,13 @@ export default async function ReservationDetailPage(props: { params: Promise<{ i
 
       <div className="mt-6 flex gap-4">
         <a
-  href={`/reservations/${reservation.uuid}/edit`}
-  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
->
+          href={`/reservations/${reservation.uuid}/edit`}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
           予約を編集する
         </a>
 
-<CancelButton id={reservation.uuid} />
- {/* ← 修正 */}
+        <CancelButton id={reservation.uuid} />
 
         <a
           href="/reservations"
@@ -76,7 +77,3 @@ export default async function ReservationDetailPage(props: { params: Promise<{ i
         >
           予約一覧に戻る
         </a>
-      </div>
-    </div>
-  );
-}
