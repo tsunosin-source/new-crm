@@ -3,8 +3,8 @@ import { createServerClient } from "@supabase/ssr";
 
 export function createClient() {
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.SUPABASE_URL!,                 // ← これが正しい
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,    // ← これが正しい
     {
       cookies: {
         get: async (name: string) => {
