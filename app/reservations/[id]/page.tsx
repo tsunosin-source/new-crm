@@ -1,25 +1,22 @@
 import { createClient } from "@/lib/supabase/server";
 import CancelButton from "./CancelButton";
 
-export default async function ReservationDetailPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const { id } = params;
+export default async function ReservationDetailPage(props: { params: Promise<{ id: string }> }) {
+  const { id } = await props.params;
 
   const supabase = createClient();
 
-// 予約データ取得（uuid で検索）
-const { data: reservation, error } = await supabase
-  .from("reservations2")
-  .select("*")
-  .eq("uuid", id)
-  .maybeSingle();
+  const { data: reservation, error } = await supabase
+    .from("reservations2")
+    .select("*")
+    .eq("uuid", id)
+    .maybeSingle();
 
-if (error || !reservation) {
-  return <div className="p-10">予約情報が見つかりませんでした。</div>;
+  if (error || !reservation) {
+    return <div className="p-10">予約情報が見つかりませんでした。</div>;
+  }
 }
+
 
   // サービス名取得
   const { data: service } = await supabase
