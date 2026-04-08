@@ -33,9 +33,9 @@ if (error || !reservation) {
       <h1 className="text-2xl font-bold mb-6">予約詳細</h1>
 
       <p>
-        <span className="font-semibold">予約ID：</span>
-        {reservation.id} {/* ← 修正 */}
-      </p>
+  <span className="font-semibold">予約ID：</span>
+  {reservation.uuid}
+</p>
 
       <p className="mt-2">
         <span className="font-semibold">日付：</span>
@@ -64,13 +64,14 @@ if (error || !reservation) {
 
       <div className="mt-6 flex gap-4">
         <a
-          href={`/reservations/${reservation.id}/edit`}  // ← 修正
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
+  href={`/reservations/${reservation.uuid}/edit`}
+  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+>
           予約を編集する
         </a>
 
-        <CancelButton id={reservation.id} /> {/* ← 修正 */}
+<CancelButton id={reservation.uuid} />
+ {/* ← 修正 */}
 
         <a
           href="/reservations"
