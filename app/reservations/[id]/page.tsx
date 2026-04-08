@@ -14,8 +14,8 @@ export default async function ReservationDetailPage({
 const { data: reservation, error } = await supabase
   .from("reservations2")
   .select("*")
-  .eq("uuid", id)   // ← ここを修正
-  .single();
+  .eq("uuid", id)
+  .maybeSingle();
 
 if (error || !reservation) {
   return <div className="p-10">予約情報が見つかりませんでした。</div>;
