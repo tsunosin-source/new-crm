@@ -10,16 +10,16 @@ export default async function ReservationDetailPage({
 
   const supabase = createClient();
 
-  // 予約データ取得（id で検索）
-  const { data: reservation, error } = await supabase
-    .from("reservations2")
-    .select("*")
-    .eq("id", id)   // ← 修正
-    .single();
+// 予約データ取得（uuid で検索）
+const { data: reservation, error } = await supabase
+  .from("reservations2")
+  .select("*")
+  .eq("uuid", id)   // ← ここを修正
+  .single();
 
-  if (error || !reservation) {
-    return <div className="p-10">予約情報が見つかりませんでした。</div>;
-  }
+if (error || !reservation) {
+  return <div className="p-10">予約情報が見つかりませんでした。</div>;
+}
 
   // サービス名取得
   const { data: service } = await supabase
