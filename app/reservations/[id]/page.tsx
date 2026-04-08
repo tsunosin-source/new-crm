@@ -10,11 +10,11 @@ export default async function ReservationDetailPage({
 
   const supabase = createClient();
 
-  // 予約データ取得（uuid で検索）
+  // 予約データ取得（id で検索）
   const { data: reservation, error } = await supabase
     .from("reservations2")
     .select("*")
-    .eq("uuid", id)   // ← ここを修正
+    .eq("id", id)   // ← 修正
     .single();
 
   if (error || !reservation) {
@@ -34,7 +34,7 @@ export default async function ReservationDetailPage({
 
       <p>
         <span className="font-semibold">予約ID：</span>
-        {reservation.uuid} {/* ← 修正 */}
+        {reservation.id} {/* ← 修正 */}
       </p>
 
       <p className="mt-2">
@@ -64,13 +64,13 @@ export default async function ReservationDetailPage({
 
       <div className="mt-6 flex gap-4">
         <a
-          href={`/reservations/${reservation.uuid}/edit`}  // ← 修正
+          href={`/reservations/${reservation.id}/edit`}  // ← 修正
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
           予約を編集する
         </a>
 
-        <CancelButton id={reservation.uuid} /> {/* ← 修正 */}
+        <CancelButton id={reservation.id} /> {/* ← 修正 */}
 
         <a
           href="/reservations"

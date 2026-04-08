@@ -1,19 +1,19 @@
 "use client";
 
-import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
-
 export default function CancelButton({ id }: { id: string }) {
-  const router = useRouter();
-  const supabase = createClient();
-
   const handleCancel = async () => {
-    await supabase
-      .from("reservations2")
-      .update({ status: "cancelled" })
-      .eq("uuid", id)
+    const res = await fetch("/api/reservations/cancel", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }), // ← reservation.id を送る
+    });
 
-    router.push("/reservations");
+    if (res.ok) {
+      alert("予約をキャンセルしました");
+      window.location.href = "/reservations";
+    } else {
+      alert("キャンセルに失敗しました");
+    }
   };
 
   return (
