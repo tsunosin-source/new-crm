@@ -106,7 +106,7 @@ export default function ReservationsPage() {
               {/* 詳細ボタン */}
               <div className="mt-4 text-right">
                 <Link
-                  href={`/reservations/${r.id}`}
+                  href={`/reservations/${r.uuid}`}
                   className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md text-sm shadow hover:bg-blue-700"
                 >
                   予約詳細を見る
