@@ -40,10 +40,11 @@ export default function ReservationsPage() {
       const supabase = createClient();
 
       const { data: reservationsData } = await supabase
-        .from("reservations2")
-        .select("*")
-        .order("date", { ascending: true })
-        .order("start_time", { ascending: true });
+  .from("reservations2")
+  .select("*")
+  .neq("status", "cancelled")   // ← これを追加！
+  .order("date", { ascending: true })
+  .order("start_time", { ascending: true });
 
       const { data: servicesData } = await supabase
         .from("services")
