@@ -109,7 +109,7 @@ export default function ReservationsPage() {
                 {r.name}
               </p>
 
-              /* サービスタグ */}
+              {/* サービスタグ */}
 <p className="mt-2">
   <span
     className={`inline-block px-2 py-1 text-sm rounded-md ${getServiceColor(
