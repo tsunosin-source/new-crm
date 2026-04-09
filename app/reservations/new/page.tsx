@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 export default function NewReservationPage() {
   const router = useRouter();
-  const supabase = createClient();  // ← これだけでOK
+  const supabase = createClient();
 
   const [services, setServices] = useState<any[]>([]);
   const [form, setForm] = useState({
@@ -29,19 +29,35 @@ export default function NewReservationPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { error } = await supabase.from("reservations2").insert([
-      {
+    // ① 名前から line_user_id を取得
+    const { data: customer } = await supabase
+      .from("customers")
+      .select("line_user_id")
+      .eq("name", form.name)
+      .single();
+
+    const lineUserId = customer?.line_user_id || null;
+
+    // ② 予約APIに送る
+    const res = await fetch("/api/reservations/new", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
         date: form.date,
         start_time: form.start_time,
         end_time: form.end_time,
         name: form.name,
-        service_id: Number(form.service_id),
-      },
-    ]);
+        service_id: form.service_id,
+        serviceName: services.find((s) => s.id == form.service_id)?.name || "",
+        lineUserId, // ← これが通知に使われる
+      }),
+    });
 
-    if (error) {
+    const result = await res.json();
+
+    if (!res.ok) {
       alert("登録に失敗しました");
-      console.error(error);
+      console.error(result);
       return;
     }
 
