@@ -23,6 +23,20 @@ export default function ReservationsPage() {
     )}/${String(d.getDate()).padStart(2, "0")}（${w}） ${startClean}〜${endClean}`;
   }
 
+  // ステータスの日本語ラベル
+  const statusLabel: any = {
+    reserved: "予約済み",
+    cancelled: "キャンセル済み",
+    completed: "来店済み",
+  };
+
+  // ステータスの色
+  const statusColor: any = {
+    reserved: "bg-green-100 text-green-700",
+    cancelled: "bg-red-100 text-red-700",
+    completed: "bg-blue-100 text-blue-700",
+  };
+
   // サービスタグの色
   function getServiceColor(id: number) {
     const colors = [
@@ -93,16 +107,26 @@ export default function ReservationsPage() {
                 {r.name}
               </p>
 
-              {/* サービスタグ */}
-              <p className="mt-2">
-                <span
-                  className={`inline-block px-2 py-1 text-sm rounded-md ${getServiceColor(
-                    r.service_id
-                  )}`}
-                >
-                  {getServiceName(r.service_id)}
-                </span>
-              </p>
+              /* サービスタグ */}
+<p className="mt-2">
+  <span
+    className={`inline-block px-2 py-1 text-sm rounded-md ${getServiceColor(
+      r.service_id
+    )}`}
+  >
+    {getServiceName(r.service_id)}
+  </span>
+</p>
+
+{/* ステータスバッジ ← ここに追加！ */}
+<p className="mt-2">
+  <span
+    className={`inline-block px-2 py-1 text-xs rounded-md ${statusColor[r.status]}`}
+  >
+    {statusLabel[r.status]}
+  </span>
+</p>
+
 
               {/* 詳細ボタン */}
               <div className="mt-4 text-right">
