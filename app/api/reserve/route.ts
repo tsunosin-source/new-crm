@@ -6,6 +6,25 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+// メニュー名 → service_id を取得する関数
+async function getServiceId(menu: string) {
+  const { data, error } = await supabase
+    .from("services")
+    .select("id")
+    .eq("name", menu)
+    .single();
+
+  if (error || !data) return null;
+  return data.id;
+}
+
+// 時間 +1時間 を作る関数
+function addOneHour(time: string) {
+  const [h, m] = time.split(":").map(Number);
+  const endH = (h + 1) % 24;
+  return `${String(endH).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -18,18 +37,30 @@ export async function POST(req: Request) {
       );
     }
 
+    // 必須カラムを生成
+    const start_time = time;
+    const end_time = addOneHour(time);
+    const service_id = await getServiceId(menu);
+
+    if (!service_id) {
+      return NextResponse.json(
+        { error: "Invalid menu (service not found)" },
+        { status: 400 }
+      );
+    }
+
     // Supabase に保存
     const { data, error } = await supabase
-  .from("reservations2")
-  .insert({
-    date: body.date,
-    start_time: body.start_time,
-    end_time: body.end_time,
-    name: body.name,
-    service_id: Number(body.service_id),
-    status: "pending",
-    uuid: crypto.randomUUID()
-  });
+      .from("reservations2")
+      .insert({
+        date,
+        start_time,
+        end_time,
+        name,
+        service_id,
+        status: "pending",
+        uuid: crypto.randomUUID(),
+      })
       .select()
       .single();
 
@@ -38,7 +69,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "DB error" }, { status: 500 });
     }
 
-    // LINE Messaging API に直接 POST
+    // LINE 通知
     await fetch("https://api.line.me/v2/bot/message/push", {
       method: "POST",
       headers: {
