@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 
 // ← ここを require に変更
 const line = require("@line/bot-sdk");
