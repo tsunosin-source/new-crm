@@ -39,19 +39,17 @@ export default function NewReservationPage() {
     const lineUserId = customer?.line_user_id || null;
 
     // ② 予約APIに送る
-    const res = await fetch("/api/reservations/new", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        date: form.date,
-        start_time: form.start_time,
-        end_time: form.end_time,
-        name: form.name,
-        service_id: form.service_id,
-        serviceName: services.find((s) => s.id == form.service_id)?.name || "",
-        lineUserId, // ← これが通知に使われる
-      }),
-    });
+    const res = await fetch("/api/reserve", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    userId: lineUserId, // ← LINE の userId
+    name: form.name,
+    date: form.date,
+    time: form.start_time, // reserve API は time を要求
+    menu: services.find((s) => s.id == form.service_id)?.name || "",
+  }),
+});
 
     const result = await res.json();
 
