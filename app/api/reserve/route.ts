@@ -20,7 +20,7 @@ export async function POST(req: Request) {
 
     // Supabase に保存
     const { data, error } = await supabase
-      .from("reservations")
+      .from("reservations2")
       .insert({
         user_id: userId,
         name,
