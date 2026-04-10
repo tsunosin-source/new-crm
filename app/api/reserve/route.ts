@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { Client } from "@line/bot-sdk";
+import line from "@line/bot-sdk";
 
-// LINE Messaging API クライアント
-const lineClient = new Client({
+const lineClient = new line.Client({
   channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN!,
 });
 
