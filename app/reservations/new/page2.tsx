@@ -40,16 +40,16 @@ export default function NewReservationPage() {
 
     // ② 予約APIに送る
     const res = await fetch("/api/reserve", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    userId: lineUserId, // ← LINE の userId
-    name: form.name,
-    date: form.date,
-    time: form.start_time, // reserve API は time を要求
-    menu: services.find((s) => s.id == form.service_id)?.name || "",
-  }),
-});
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: lineUserId, // ← LINE の userId
+        name: form.name,
+        date: form.date,
+        time: form.start_time, // reserve API は time を要求
+        menu: services.find((s) => s.id == form.service_id)?.name || "",
+      }),
+    });
 
     const result = await res.json();
 
@@ -137,3 +137,4 @@ export default function NewReservationPage() {
       </form>
     </div>
   );
+}
