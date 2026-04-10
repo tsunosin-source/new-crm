@@ -20,14 +20,16 @@ export async function POST(req: Request) {
 
     // Supabase に保存
     const { data, error } = await supabase
-      .from("reservations2")
-      .insert({
-        user_id: userId,
-        name,
-        date,
-        time,
-        menu,
-      })
+  .from("reservations2")
+  .insert({
+    date: body.date,
+    start_time: body.start_time,
+    end_time: body.end_time,
+    name: body.name,
+    service_id: Number(body.service_id),
+    status: "pending",
+    uuid: crypto.randomUUID()
+  });
       .select()
       .single();
 
