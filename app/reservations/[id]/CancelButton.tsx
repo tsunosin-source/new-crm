@@ -1,19 +1,19 @@
-import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+"use client";
 
-export async function POST(req: Request) {
-  const supabase = createClient();
-  const { id } = await req.json(); // ← uuid を受け取る
+export default function CancelButton({ reservationId }: { reservationId: string }) {
+  const handleCancel = async () => {
+    await fetch(`/api/cancel?id=${reservationId}`, {
+      method: "POST",
+    });
+    alert("キャンセルしました");
+  };
 
-  const { error } = await supabase
-    .from("reservations2")
-    .update({ status: "cancelled" })
-    .eq("uuid", id); // ← uuid で検索するのが正しい
-
-  if (error) {
-    console.error(error);
-    return NextResponse.json({ success: false }, { status: 500 });
-  }
-
-  return NextResponse.json({ success: true });
+  return (
+    <button
+      onClick={handleCancel}
+      className="px-4 py-2 bg-red-500 text-white rounded"
+    >
+      キャンセルする
+    </button>
+  );
 }
