@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import line from "@line/bot-sdk";
+import { NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
+
+// ← ここを require に変更
+const line = require("@line/bot-sdk");
 
 const lineClient = new line.Client({
   channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN!,
