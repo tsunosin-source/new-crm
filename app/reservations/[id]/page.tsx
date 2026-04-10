@@ -69,7 +69,7 @@ export default async function ReservationDetailPage(
           予約を編集する
         </a>
 
-        <CancelButton id={reservation.uuid} />
+        <CancelButton reservationId={reservation.uuid} />
 
         <a
           href="/reservations"
