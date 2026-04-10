@@ -1,27 +1,19 @@
-"use client";
+import { NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
 
-export default function CancelButton({ id }: { id: string }) {
-  const handleCancel = async () => {
-    const res = await fetch("/api/reservations/cancel", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }), // ← reservation.id を送る
-    });
+export async function POST(req: Request) {
+  const supabase = createClient();
+  const { id } = await req.json(); // ← uuid を受け取る
 
-    if (res.ok) {
-      alert("予約をキャンセルしました");
-      window.location.href = "/reservations";
-    } else {
-      alert("キャンセルに失敗しました");
-    }
-  };
+  const { error } = await supabase
+    .from("reservations2")
+    .update({ status: "cancelled" })
+    .eq("uuid", id); // ← uuid で検索するのが正しい
 
-  return (
-    <button
-      onClick={handleCancel}
-      className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-    >
-      予約をキャンセルする
-    </button>
-  );
+  if (error) {
+    console.error(error);
+    return NextResponse.json({ success: false }, { status: 500 });
+  }
+
+  return NextResponse.json({ success: true });
 }
